@@ -1,0 +1,8 @@
+github.com/cauefcr/lifeofthegroup v0.0.0-20190130050139-e749c7b34f7a h1:iG70Vv2+9mFuV/CAX9onL4hDe/4edw3Q1QGQSmcgQUk=
+github.com/cauefcr/lifeofthegroup v0.0.0-20190130050139-e749c7b34f7a/go.mod h1:wHqAurGcfQoIDRlTkU2LohAHZkZQIkzZRJgrVXFRQzI=
+github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible h1:2cauKuaELYAEARXRkq2LrJ0yDDv1rW7+wrTEdVL3uaU=
+github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible/go.mod h1:qf9acutJ8cwBUhm1bqgz6Bei9/C/c93FPDljKWwsOgM=
+github.com/technoweenie/multipartstreamer v1.0.1 h1:XRztA5MXiR1TIRHxH2uNxXxaIkKQDeX7m2XsSOlQEnM=
+github.com/technoweenie/multipartstreamer v1.0.1/go.mod h1:jNVxdtShOxzAsukZwTSw6MDx5eUJoiEBsSvzDU9uzog=
+gopkg.in/ffmt.v1 v1.5.1 h1:g0U+IrBNZNa2FJ3uKZywttQU7MsefvviWnFN/mxt5LQ=
+gopkg.in/ffmt.v1 v1.5.1/go.mod h1:mSXnXncj1LvlwFkPFxqwW45Xr48EZgWjMKgB/rw+N0s=
