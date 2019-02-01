@@ -3,7 +3,7 @@
 
 It accepts the bot owner's items for sale, it bothers everone that joins the channel to buy the items, accepts crypto for payment or sends the owner contact to the buyer. All of this is subject to change, of course.
 
-#Usage
+# Usage
 You should set the environment variables
 ```bash
 TELEGRAM_OWNER

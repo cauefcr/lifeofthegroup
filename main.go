@@ -1,13 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"gopkg.in/ffmt.v1"
 	"log"
+	"os"
+	"regexp"
 	"strconv"
 	"strings"
-	"os"
-	"fmt"
+	"time"
 )
 
 //TODO bot de compra e vendas pro telegram
@@ -24,7 +26,7 @@ import (
 
 var (
 	owner  = os.Getenv("TELEGRAM_OWNER") // you should set this to your username
-	ApiKey = os.Getenv("TELEGRAM_KEY") // you should set this to your api key
+	ApiKey = os.Getenv("TELEGRAM_KEY")   // you should set this to your api key
 	logger = log.Logger{}
 	//todo add timeout on states
 	//id -> state
@@ -93,14 +95,87 @@ var sendchargeKeyboard = tgbotapi.NewInlineKeyboardMarkup(
 	),
 )
 
+type handler struct {
+	Path    string
+	Handler func(update *tgbotapi.Update)
+}
+
+var handlers = []handler{}
+
+func addHandler(path string, onmatch func(update *tgbotapi.Update)) {
+	handlers = append(handlers, handler{Path: path, Handler: onmatch})
+}
+
+//todo remove str != nil checks
+func execHandlers(u *tgbotapi.Update) {
+	str := ""
+	if u.Message != nil { //pvt message
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.Message.Text
+	} else if u.ChannelPost != nil { //
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.ChannelPost.Text
+	} else if u.ChosenInlineResult != nil { //
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.ChannelPost.Text
+	} else if u.EditedChannelPost != nil {
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.EditedChannelPost.Text
+	} else if u.EditedMessage != nil {
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.EditedMessage.Text
+	} else if u.CallbackQuery != nil {
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.CallbackQuery.Data
+	} else if u.InlineQuery != nil {
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.InlineQuery.Query
+	} else if u.PreCheckoutQuery != nil {
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.PreCheckoutQuery.InvoicePayload
+	} else if u.ShippingQuery != nil {
+		if str != "" {
+			logger.Println("str was already used!")
+		}
+		str = u.ShippingQuery.InvoicePayload
+	}
+	fmt.Print("str: ", str)
+	for _, h := range handlers {
+		match, err := regexp.MatchString(h.Path, str)
+		if err != nil {
+			logger.Print("error matching path to input string")
+		}
+		if match {
+			h.Handler(u)
+		}
+	}
+
+}
+
 func main() {
 
-	owner  = os.Getenv("TELEGRAM_OWNER")
+	owner = os.Getenv("TELEGRAM_OWNER")
 	ApiKey = os.Getenv("TELEGRAM_KEY")
 
 	bot, err := tgbotapi.NewBotAPI(ApiKey)
 	if err != nil {
-		fmt.Print(ApiKey,owner)
+		fmt.Print(ApiKey, owner)
 		//log.Panic(err)
 		return
 	}
@@ -113,10 +188,16 @@ func main() {
 	u.Timeout = 60
 
 	updates, err := bot.GetUpdatesChan(u)
+	addHandler("", func(update *tgbotapi.Update) {
+		fmt.Print("woo!\n")
+	})
+	time.Sleep(time.Millisecond * 500)
+	updates.Clear()
 
 	for update := range updates {
+		execHandlers(&update)
 		//if button press
-		ffmt.Print(update)
+		//ffmt.Print(update)
 		if update.CallbackQuery != nil {
 			bot.AnswerCallbackQuery(tgbotapi.NewCallback(update.CallbackQuery.ID, update.CallbackQuery.Data))
 
